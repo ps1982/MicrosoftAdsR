@@ -3,7 +3,18 @@ path <- paste0(.libPaths()[1],"/MicrosoftAdsR/META/")
 
 
 ####AUTHENTICATION#####
-baAuthentication <- function(credentials)
+
+#' Microsoft Ads Authentication Function
+#'
+#' This function allows you to authenticate with Microsoft Ads
+#' @param Credentials Pass the client id, account id, customer id and dev token
+#' @keywords Authentication
+#' @export
+#' @examples
+#' Authentication()
+
+
+Authentication <- function(credentials)
 {
   ## Define functions
   setAccessToken <- function(credentials, access_token, refresh_token, expires_in)
