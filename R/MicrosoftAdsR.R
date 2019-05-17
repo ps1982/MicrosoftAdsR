@@ -208,7 +208,6 @@ getDownloadUrl <- function(credentials, reportId)
     }
 
   downloadUrl <- xmlToList(h$value())$Body$PollGenerateReportResponse$ReportRequestStatus$ReportDownloadUrl
-  #destfilelocation <- sprintf("\\\\SGUKNAS01\\Departments\\Manchester\\Marketing\\MMD Migration\\Customer Insight\\Digital Marketing Data\\2. Bing\\bing_%s_%s_%s",startDate, endDate, ".zip")
   destfilelocation <- sprintf(credentials$download_location, sprintf(credentials$filename,reportId,startDate,endDate))
   download.file(url = downloadUrl, destfile = destfilelocation, mode = 'wb', method ='auto', quiet=TRUE)
   print(sprintf("File downloaded Successfully here: %s",destfilelocation))
