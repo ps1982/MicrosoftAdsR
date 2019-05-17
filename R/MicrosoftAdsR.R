@@ -1,6 +1,5 @@
 rm(list=ls())
-path <- paste0(.libPaths()[1],"/MicrosoftAdsR/META/")
-
+path <- paste0(.libPaths()[1],"/MicrosoftAdsR/")
 
 ####AUTHENTICATION#####
 
@@ -20,12 +19,16 @@ Authentication <- function(credentials)
   setAccessToken <- function(credentials, access_token, refresh_token, expires_in)
   {
     credentials <- list(
-      client_id = credentials$client_id,
-      access_token = access_token,
+      client_id     = credentials$client_id,
+      access_token  = access_token,
       refresh_token = refresh_token,
-      expires_in = expires_in,
-      account_id = credentials$account_id,
-      customer_id = credentials$customer_id,
+      expires_in    = expires_in,
+      account_id    = credentials$account_id,
+      download_location = credentials$download_location,
+      filename      = credentials$filename,
+      startDate     = credentials$startDate,
+      endDate       = credentials$endDate,
+      customer_id   = credentials$customer_id,
       developer_token = credentials$developer_token)
 
     print("Tokens Generated.")
@@ -93,6 +96,17 @@ Authentication <- function(credentials)
 }
 
 ##Report Any Type
+
+#' Get Report ID Function
+#'
+#' This function allows you to request the report and get the required report id
+#' @param Credentials Pass the client id, account id, customer id and dev token
+#' @keywords getReportId
+#' @export
+#' @examples
+#' getReportId()
+
+
 getReportId <- function(credentials, report, columns, startDate, endDate){
   dateSplitter <- function(x){
     x <- as.Date(x, origin = "1970-01-01")
@@ -111,8 +125,8 @@ getReportId <- function(credentials, report, columns, startDate, endDate){
     return(columnsXML)
   }
 
-  startDate <- dateSplitter(startDate)
-  endDate <- dateSplitter(endDate)
+  startDate <- dateSplitter(credentials$startDate)
+  endDate <- dateSplitter(credentials$endDate)
   reportname <- gsub("Request","",report)
   url <- "https://reporting.api.bingads.microsoft.com/Api/Advertiser/Reporting/v13/ReportingService.svc"
   SOAPAction <- "SubmitGenerateReport"
@@ -139,6 +153,15 @@ getReportId <- function(credentials, report, columns, startDate, endDate){
   return(reportId)
 }
 
+#' Download Report Function
+#'
+#' This function uses the report ID - polls to check if the report is ready then hits the download url
+#' @param Credentials Pass the access token, developer token and account id along with the report id
+#' @keywords getDownloadUrl
+#' @export
+#' @examples
+#' getDownloadUrl()
+
 getDownloadUrl <- function(credentials, reportId)
   {
     url <- "https://reporting.api.bingads.microsoft.com/Api/Advertiser/Reporting/v13/ReportingService.svc"
@@ -152,7 +175,7 @@ getDownloadUrl <- function(credentials, reportId)
 
     status <- "Generating"
     attempts <- 0
-
+    print(sprintf("Report Status: %s",status))
     while (status != "Success" && attempts < 10)
     {
       attempts <- attempts + 1
@@ -178,14 +201,16 @@ getDownloadUrl <- function(credentials, reportId)
                     verbose = FALSE)
             body = h$value
             status <- xmlToList(h$value())$Body$PollGenerateReportResponse$ReportRequestStatus$Status
-            print(status)
-            print(attempts)
+            print(sprintf("Attempt: %s",attempts))
+            print(sprintf("Report Status: %s",status))
             msg = ("All good")
           }
     }
 
   downloadUrl <- xmlToList(h$value())$Body$PollGenerateReportResponse$ReportRequestStatus$ReportDownloadUrl
-  zip(zipfile = 'tmp.zip', files = 'refresh_token')
-  download.file(url = downloadUrl, destfile = "\\\\SGUKNAS01\\Departments\\Manchester\\Marketing\\Customer Insight\\Digital Marketing Data\\2. Bing\\tmp.zip", mode = 'wb', method ='auto')
+  #destfilelocation <- sprintf("\\\\SGUKNAS01\\Departments\\Manchester\\Marketing\\MMD Migration\\Customer Insight\\Digital Marketing Data\\2. Bing\\bing_%s_%s_%s",startDate, endDate, ".zip")
+  destfilelocation <- sprintf(credentials$download_location, sprintf(credentials$filename,reportId,startDate,endDate))
+  download.file(url = downloadUrl, destfile = destfilelocation, mode = 'wb', method ='auto', quiet=TRUE)
+  print(sprintf("File downloaded Successfully here: %s",destfilelocation))
   }
 
