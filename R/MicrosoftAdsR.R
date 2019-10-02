@@ -166,6 +166,7 @@ getDownloadUrl <- function(credentials, reportId)
   {
     url <- "https://reporting.api.bingads.microsoft.com/Api/Advertiser/Reporting/v13/ReportingService.svc"
     SOAPAction <- "PollGenerateReport"
+    reporttype <- gsub("Request","", report)
     report <- "PollGenerateReportRequest"
     header <- paste(readLines(paste0(path,"reporting.header.xml")), collapse = "")
     bodyXML <- '<PollGenerateReportRequest xmlns="https://bingads.microsoft.com/Reporting/v13"><ReportRequestId i:nil="false">%s</ReportRequestId></PollGenerateReportRequest>'
@@ -208,7 +209,7 @@ getDownloadUrl <- function(credentials, reportId)
     }
 
   downloadUrl <- xmlToList(h$value())$Body$PollGenerateReportResponse$ReportRequestStatus$ReportDownloadUrl
-  destfilelocation <- sprintf(credentials$download_location, sprintf(credentials$filename,reportId,startDate,endDate))
+  destfilelocation <- sprintf(credentials$download_location, sprintf(credentials$filename,reporttype,reportId,credentials$startDate,credentials$endDate))
   download.file(url = downloadUrl, destfile = destfilelocation, mode = 'wb', method ='auto', quiet=TRUE)
   print(sprintf("File downloaded Successfully here: %s",destfilelocation))
   }
