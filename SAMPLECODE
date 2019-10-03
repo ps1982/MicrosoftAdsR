@@ -1,4 +1,3 @@
-#library(bingAdsR)
 library(RCurl)
 library(httr)
 library(jsonlite)
@@ -6,6 +5,7 @@ library(XML2R)
 library(MicrosoftAdsR)
 
 ###For authorization and access token###
+
 credentials <- list(
   client_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
   developer_token = "xxxxxxxxxxxxxxxx",
@@ -19,7 +19,7 @@ credentials <- list(
 
 credentials <- Authentication(credentials)
 
-#####Generate the data
+###Generate the data
 report <- "AccountPerformanceReportRequest"
 columns <- c("TimePeriod", "AccountId", "AccountName", "Impressions", "Clicks", "Spend", "Conversions")
 
