@@ -1,9 +1,10 @@
+rm(list=ls())
+
 library(RCurl)
 library(httr)
 library(jsonlite)
 library(XML2R)
 
-rm(list=ls())
 #path <- paste0(.libPaths()[1],"/MicrosoftAdsR/")
 
 ####AUTHENTICATION#####
