@@ -6,10 +6,17 @@ Author: Phil Schonewille <phil.schonewille@gmail.com>
 Maintainer: Phil Schonewille <phil.schonewille@gmail.com>
 Description: Aims at downloading Microsoft Advertisring (previoulsy Bing Ads) data as a csv.
     The package provides an authentication process for R via OAUTH2.
-Imports: httr, 
-         jsonlite, 
-         RCurl, 
-         XML2R
+Depends: 
+  httr, 
+  jsonlite, 
+  RCurl, 
+  XML2R
+Imports: 
+  httr, 
+  jsonlite, 
+  RCurl, 
+  XML2R
+StagedInstall: no  
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
