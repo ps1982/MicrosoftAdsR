@@ -1,27 +1,23 @@
-library(RCurl)
-library(httr)
-library(jsonlite)
-library(XML2R)
 library(MicrosoftAdsR)
 
 ###For authorization and access token###
-
 credentials <- list(
-  client_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-  developer_token = "xxxxxxxxxxxxxxxx",
-  customer_id = "xxxxxxxx",
-  account_id = "xxxxxxxxx",
-  download_location = "c:\\Digital Marketing Data\\2. Bing\\%s",
-  filename = "bing_%s_%s_%s_.zip",  #reportid followed by startdate followed by enddate
+  client_id = "7ec28fa2-1b17-497a-97fc-72396216207b",
+  developer_token = "115H5SPGK5154673",
+  customer_id = "18032738",
+  account_id = "146004002",
+  download_location = "Z:\\General\\Digital Marketing\\Microsoft Ads R Data\\%s",
+  filename = "bing_%s_%s_%s_%s_.zip",  #reportid followed by startdate followed by enddate
   startDate = format.Date(Sys.Date() - 7, "%Y-%m-%d"),
   endDate = format.Date(Sys.Date() - 1, "%Y-%m-%d")
   )
 
 credentials <- Authentication(credentials)
 
-###Generate the data
+#####Generate the data
 report <- "AccountPerformanceReportRequest"
 columns <- c("TimePeriod", "AccountId", "AccountName", "Impressions", "Clicks", "Spend", "Conversions")
 
 reportId <- getReportId(credentials, report, columns, startDate, endDate)
 downloadUrl <- getDownloadUrl(credentials, reportId)
+
