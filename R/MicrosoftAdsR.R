@@ -51,6 +51,7 @@ Authentication <- function(credentials)
     access_token <- oauthtokens$access_token
     expires_in <- oauthtokens$expires_in
     refresh_token <- oauthtokens$refresh_token
+    write(refresh_token, "bing_refresh_token")
     credentials <- setAccessToken(credentials, access_token, refresh_token, expires_in)
     return(credentials)
   }
