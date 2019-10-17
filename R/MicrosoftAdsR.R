@@ -135,8 +135,9 @@ getReportId <- function(credentials, report, columns, startDate, endDate){
   header <- paste(readLines(paste0(path,"reporting.header.xml")), collapse = "")
   bodyXML <- paste(readLines(paste0(path,"reporting.SubmitGenerateReportRequest.xml")), collapse = "")
   columnsXML <- getColumnsXML(reportname, columms)
-  bodyXML <- sprintf(bodyXML, report, report, columnsXML, credentials$account_id, endDate$day, endDate$month, endDate$year, startDate$day, startDate$month, startDate$year)
-  body <- sprintf(header, SOAPAction, credentials$access_token, credentials$account_id, credentials$customer_id, credentials$developer_token, bodyXML)
+  #bodyXML <- sprintf(bodyXML, report, report, columnsXML, credentials$account_id, endDate$day, endDate$month, endDate$year, startDate$day, startDate$month, startDate$year)
+  bodyXML <- sprintf(bodyXML, report, report, columnsXML, account_id, endDate$day, endDate$month, endDate$year, startDate$day, startDate$month, startDate$year)
+  body <- sprintf(header, SOAPAction, credentials$access_token, account_id, credentials$customer_id, credentials$developer_token, bodyXML)
   h = basicTextGatherer()
   body
   h$reset()
@@ -172,12 +173,13 @@ getDownloadUrl <- function(credentials, reportId)
     report <- "PollGenerateReportRequest"
     header <- paste(readLines(paste0(path,"reporting.header.xml")), collapse = "")
     bodyXML <- '<PollGenerateReportRequest xmlns="https://bingads.microsoft.com/Reporting/v13"><ReportRequestId i:nil="false">%s</ReportRequestId></PollGenerateReportRequest>'
-    bodyXML <- sprintf(bodyXML, reportId)
-    body <- sprintf(header, SOAPAction, credentials$access_token,credentials$account_id,credentials$customer_id,  credentials$developer_token,bodyXML)
+    bodyXML <- sprintf(bodyXML, report_id)
+    body <- sprintf(header, SOAPAction, credentials$access_token,account_id,credentials$customer_id,  credentials$developer_token,bodyXML)
     h = basicTextGatherer()
 
     status <- "Generating"
     attempts <- 0
+    print(sprintf("Requesting report for account id: %s",account_id))
     print(sprintf("Report Status: %s",status))
     while (status != "Success" && attempts < 10)
     {
@@ -192,7 +194,7 @@ getDownloadUrl <- function(credentials, reportId)
           msg = ("Error in report request")
           stop(msg)
           } else {
-            body <- sprintf(header, SOAPAction, credentials$access_token,credentials$account_id,credentials$customer_id,  credentials$developer_token,bodyXML)
+            body <- sprintf(header, SOAPAction, credentials$access_token,account_id,credentials$customer_id,  credentials$developer_token,bodyXML)
             h = basicTextGatherer()
             h$reset()
             curlPerform(url = url,
@@ -207,12 +209,22 @@ getDownloadUrl <- function(credentials, reportId)
             print(sprintf("Attempt: %s",attempts))
             print(sprintf("Report Status: %s",status))
             msg = ("All good")
+            date_time<-Sys.time()
+            while((as.numeric(Sys.time()) - as.numeric(date_time))<2){} #dummy while loop - wait x seconds
           }
     }
 
   downloadUrl <- xmlToList(h$value())$Body$PollGenerateReportResponse$ReportRequestStatus$ReportDownloadUrl
-  destfilelocation <- sprintf(credentials$download_location, sprintf(credentials$filename,reporttype,reportId,credentials$startDate,credentials$endDate))
-  download.file(url = downloadUrl, destfile = destfilelocation, mode = 'wb', method ='auto', quiet=TRUE)
-  print(sprintf("File downloaded Successfully here: %s",destfilelocation))
+
+  if (is.null(downloadUrl)| downloadUrl=="" | downloadUrl=="true") {
+    print(sprintf("No File To downloaded - No data for account: %s and time period selected",account_id))
+    }  else    {
+    destfilelocation <- sprintf(credentials$download_location, sprintf(credentials$filename,reporttype,account_id,credentials$startDate,credentials$endDate))
+    download.file(url = downloadUrl, destfile = destfilelocation, mode = 'wb', method ='auto', quiet=TRUE)
+    print(sprintf("File downloaded Successfully for account %s here: %s",account_id, destfilelocation))
+    print(" ")
+    }
   }
+
+
 

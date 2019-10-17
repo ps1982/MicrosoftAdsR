@@ -2,11 +2,10 @@ library(MicrosoftAdsR)
 
 ###For authorization and access token###
 credentials <- list(
-  client_id = "7ec28fa2-1b17-497a-97fc-72396216207b",
-  developer_token = "115H5SPGK5154673",
-  customer_id = "18032738",
-  account_id = "146004002",
-  download_location = "Z:\\General\\Digital Marketing\\Microsoft Ads R Data\\%s",
+  client_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  developer_token = "xxxxxxxxxxxxxxxx",
+  customer_id = "xxxxxxxx",
+  download_location = "C:\\R Data\\Digital Marketing\\Microsoft Ads\\%s",
   filename = "bing_%s_%s_%s_%s_.zip",  #reportid followed by startdate followed by enddate
   startDate = format.Date(Sys.Date() - 7, "%Y-%m-%d"),
   endDate = format.Date(Sys.Date() - 1, "%Y-%m-%d")
@@ -15,9 +14,21 @@ credentials <- list(
 credentials <- Authentication(credentials)
 
 #####Generate the data
-report <- "AccountPerformanceReportRequest"
-columns <- c("TimePeriod", "AccountId", "AccountName", "Impressions", "Clicks", "Spend", "Conversions")
 
-reportId <- getReportId(credentials, report, columns, startDate, endDate)
-downloadUrl <- getDownloadUrl(credentials, reportId)
+#vector of account ids
+accounts <- c(  '123456789'
+               ,'123784684'
+               ,'211678457'
+               )
 
+report <- "KeywordPerformanceReportRequest"
+columns <- c("TimePeriod", "AccountNumber", "AccountId", "AccountName", "AccountStatus", "Network", "CampaignId", "CampaignStatus", "CampaignName", "AdGroupId","AdGroupName", "AdGroupStatus","KeywordId", "Keyword", "KeywordStatus", "BidMatchType", "DeliveredMatchType", "LandingPageExperience", "QualityImpact","AdRelevance", "AdDistribution", "QualityScore", "Impressions", "Clicks", "Spend", "AveragePosition", "Conversions")
+
+dataList <- list()
+
+for (account_id in accounts){
+  dataList[[account_id]] <-
+    (account_id=account_id)
+  report_id <- getReportId(credentials, report, columns, startDate, endDate)
+  downloadUrl <- getDownloadUrl(credentials, report_id)
+}

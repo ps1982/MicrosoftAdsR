@@ -1,7 +1,7 @@
 Package: MicrosoftAdsR
 Type: Package
 Title: Download Microsoft Advertising Report Data
-Version: 1.0.0
+Version: 1.1.0
 Author: Phil Schonewille <phil.schonewille@gmail.com>
 Maintainer: Phil Schonewille <phil.schonewille@gmail.com>
 Description: Aims at downloading Microsoft Advertisring (previoulsy Bing Ads) data as a csv.
