@@ -3,3 +3,8 @@
 export(Authentication)
 export(getDownloadUrl)
 export(getReportId)
+importFrom("utils", "browseURL", "download.file")
+import("RCurl")
+import("XML2R")
+import("httr")
+import("jsonlite")
