@@ -181,11 +181,11 @@ getDownloadUrl <- function(credentials, reportId)
     attempts <- 0
     print(sprintf("Requesting report for account id: %s",account_id))
     print(sprintf("Report Status: %s",status))
-    while (status != "Success" && attempts < 10)
+    while (status != "Success" && attempts < 151)
     {
       attempts <- attempts + 1
 
-      if (attempts > 9)
+      if (attempts > 150)
         {
         msg = ("Too many retries, job failed")
         stop(msg)
