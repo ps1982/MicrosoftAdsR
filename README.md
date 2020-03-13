@@ -1,5 +1,5 @@
 # MicrosoftAdsR
-Bings Ads Reporting 
+Microsoft Advertising Report 
 
 # Introduction
 This project was created to call the microsoft ads api and download the report programmatically given Mcirosoft's lack of functionality and options in terms of report delivery. 
